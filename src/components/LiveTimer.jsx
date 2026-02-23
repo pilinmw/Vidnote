@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { formatTime } from '../utils/formatTime';
 import useVideoStore from '../stores/useVideoStore';
+import ConfirmDialog from './ConfirmDialog';
 
 /**
  * 直播/会议模式的计时器组件
- * 替代视频播放器，提供自运行的时间戳
  */
 export default function LiveTimer({ mode = 'live', projectId }) {
     const [elapsed, setElapsed] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [startedAt, setStartedAt] = useState(null);
+    const [showResetConfirm, setShowResetConfirm] = useState(false);
     const intervalRef = useRef(null);
     const { setCurrentTime } = useVideoStore();
 
-    // Sync elapsed time to store
     useEffect(() => {
         setCurrentTime(elapsed);
     }, [elapsed, setCurrentTime]);
@@ -29,16 +29,18 @@ export default function LiveTimer({ mode = 'live', projectId }) {
         setIsRunning(false);
     }, []);
 
-    const reset = useCallback(() => {
-        if (window.confirm('确定重置计时器吗？笔记不会被删除。')) {
-            setIsRunning(false);
-            setElapsed(0);
-            setStartedAt(null);
-            setCurrentTime(0);
-        }
+    const handleResetClick = useCallback(() => {
+        setShowResetConfirm(true);
+    }, []);
+
+    const handleConfirmReset = useCallback(() => {
+        setShowResetConfirm(false);
+        setIsRunning(false);
+        setElapsed(0);
+        setStartedAt(null);
+        setCurrentTime(0);
     }, [setCurrentTime]);
 
-    // Timer tick
     useEffect(() => {
         if (isRunning && startedAt) {
             intervalRef.current = setInterval(() => {
@@ -48,7 +50,6 @@ export default function LiveTimer({ mode = 'live', projectId }) {
         } else {
             clearInterval(intervalRef.current);
         }
-
         return () => clearInterval(intervalRef.current);
     }, [isRunning, startedAt]);
 
@@ -74,67 +75,74 @@ export default function LiveTimer({ mode = 'live', projectId }) {
     const config = modeConfig[mode] || modeConfig.live;
 
     return (
-        <div className="live-timer-wrapper" style={{ background: config.bgGradient }}>
-            {/* Status Indicator */}
-            <div className="live-timer-status">
-                <div
-                    className={`live-timer-dot ${isRunning ? 'active' : ''}`}
-                    style={{
-                        background: config.color,
-                        boxShadow: isRunning ? `0 0 12px ${config.pulseColor}` : 'none',
-                    }}
-                />
-                <span style={{ color: config.color, fontWeight: 600 }}>
-                    {config.icon} {config.title}
-                </span>
-                <span className="live-timer-subtitle">{config.subtitle}</span>
-            </div>
-
-            {/* Timer Display */}
-            <div className="live-timer-display">
-                <span className="live-timer-time">{formatTime(elapsed)}</span>
-            </div>
-
-            {/* Controls */}
-            <div className="live-timer-controls">
-                {!isRunning ? (
-                    <button
-                        className="btn btn-primary live-timer-btn"
-                        onClick={start}
-                        id="timer-start-btn"
+        <>
+            <div className="live-timer-wrapper" style={{ background: config.bgGradient }}>
+                <div className="live-timer-status">
+                    <div
+                        className={`live-timer-dot ${isRunning ? 'active' : ''}`}
                         style={{
                             background: config.color,
-                            boxShadow: `0 4px 16px ${config.pulseColor}`,
+                            boxShadow: isRunning ? `0 0 12px ${config.pulseColor}` : 'none',
                         }}
-                    >
-                        {elapsed > 0 ? '▶ 继续' : '▶ 开始记录'}
-                    </button>
-                ) : (
-                    <button
-                        className="btn btn-secondary live-timer-btn"
-                        onClick={pause}
-                        id="timer-pause-btn"
-                    >
-                        ⏸ 暂停
-                    </button>
-                )}
-                {elapsed > 0 && (
-                    <button
-                        className="btn btn-ghost live-timer-btn"
-                        onClick={reset}
-                        id="timer-reset-btn"
-                    >
-                        ↺ 重置
-                    </button>
+                    />
+                    <span style={{ color: config.color, fontWeight: 600 }}>
+                        {config.icon} {config.title}
+                    </span>
+                    <span className="live-timer-subtitle">{config.subtitle}</span>
+                </div>
+
+                <div className="live-timer-display">
+                    <span className="live-timer-time">{formatTime(elapsed)}</span>
+                </div>
+
+                <div className="live-timer-controls">
+                    {!isRunning ? (
+                        <button
+                            className="btn btn-primary live-timer-btn"
+                            onClick={start}
+                            id="timer-start-btn"
+                            style={{
+                                background: config.color,
+                                boxShadow: `0 4px 16px ${config.pulseColor}`,
+                            }}
+                        >
+                            {elapsed > 0 ? '▶ 继续' : '▶ 开始记录'}
+                        </button>
+                    ) : (
+                        <button
+                            className="btn btn-secondary live-timer-btn"
+                            onClick={pause}
+                            id="timer-pause-btn"
+                        >
+                            ⏸ 暂停
+                        </button>
+                    )}
+                    {elapsed > 0 && (
+                        <button
+                            className="btn btn-ghost live-timer-btn"
+                            onClick={handleResetClick}
+                            id="timer-reset-btn"
+                        >
+                            ↺ 重置
+                        </button>
+                    )}
+                </div>
+
+                {!isRunning && elapsed === 0 && (
+                    <p className="live-timer-hint">
+                        点击"开始记录"启动计时器，然后在右侧面板添加笔记
+                    </p>
                 )}
             </div>
 
-            {/* Hint */}
-            {!isRunning && elapsed === 0 && (
-                <p className="live-timer-hint">
-                    点击"开始记录"启动计时器，然后在右侧面板添加笔记
-                </p>
-            )}
-        </div>
+            <ConfirmDialog
+                isOpen={showResetConfirm}
+                title="↺ 重置计时器"
+                message="确定重置计时器吗？计时将归零，但已有的笔记不会被删除。"
+                confirmText="重置"
+                onConfirm={handleConfirmReset}
+                onCancel={() => setShowResetConfirm(false)}
+            />
+        </>
     );
 }
