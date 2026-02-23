@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VidNote</title>
+    <link rel="stylesheet" href="panel.css" />
+</head>
+
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="panel-header">
+            <div class="panel-header-brand">
+                <svg width="24" height="24" viewBox="0 0 64 64">
+                    <defs>
+                        <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#7C3AED;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="64" height="64" rx="14" fill="url(#logo-grad)" />
+                    <polygon points="24,18 24,46 48,32" fill="white" opacity="0.95" />
+                    <rect x="12" y="48" width="28" height="3" rx="1.5" fill="white" opacity="0.7" />
+                    <rect x="12" y="53" width="20" height="3" rx="1.5" fill="white" opacity="0.5" />
+                </svg>
+                <span class="panel-header-title">VidNote</span>
+            </div>
+            <div class="panel-header-actions">
+                <button id="btn-export" class="icon-btn" title="导出 Markdown">📥</button>
+                <button id="btn-settings" class="icon-btn" title="设置">⚙️</button>
+            </div>
+        </header>
+
+        <!-- Video Info Bar -->
+        <div id="video-info" class="video-info hidden">
+            <div class="video-info-title" id="video-title">未检测到视频</div>
+            <div class="video-info-time">
+                <span id="current-time">00:00</span>
+                <span class="time-sep">/</span>
+                <span id="duration">00:00</span>
+            </div>
+        </div>
+
+        <!-- Status Banner -->
+        <div id="status-banner" class="status-banner">
+            <div class="status-icon">🎬</div>
+            <div class="status-text">打开 YouTube 视频页面开始记笔记</div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">全部</button>
+                <button class="filter-tab" data-filter="highlights">⭐ 高光</button>
+            </div>
+            <div class="note-count">
+                <span id="note-count">0</span> 条笔记
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="搜索笔记..." />
+        </div>
+
+        <!-- Notes List -->
+        <div id="notes-list" class="notes-list">
+            <div class="empty-notes">
+                <div class="empty-notes-icon">📝</div>
+                <p>暂无笔记</p>
+                <p class="empty-notes-hint">播放视频时，在下方输入内容添加笔记</p>
+            </div>
+        </div>
+
+        <!-- AI Summary Panel -->
+        <div id="ai-panel" class="ai-panel hidden">
+            <div class="ai-panel-header" id="ai-toggle">
+                <span>🤖 AI 总结</span>
+                <span class="ai-panel-arrow">▼</span>
+            </div>
+            <div class="ai-panel-body hidden" id="ai-body">
+                <div class="ai-actions">
+                    <button id="btn-ai-full" class="btn btn-sm">📋 全文总结</button>
+                    <button id="btn-ai-highlights" class="btn btn-sm">⭐ 高光摘要</button>
+                </div>
+                <div id="ai-result" class="ai-result hidden"></div>
+                <div id="ai-loading" class="ai-loading hidden">
+                    <div class="spinner"></div>
+                    <span>AI 正在分析...</span>
+                </div>
+                <div id="ai-error" class="ai-error hidden"></div>
+            </div>
+        </div>
+
+        <!-- Note Input Area -->
+        <div class="note-input-area">
+            <div class="note-input-wrapper">
+                <textarea id="note-input" placeholder="输入笔记内容... (⌘+Enter 快速添加)" rows="2"></textarea>
+                <button id="btn-add-note" class="btn-add-note" title="添加笔记">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="note-input-hint">
+                将在 <strong id="input-timestamp">00:00</strong> 处添加笔记
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content">
+                <h3>⚙️ 设置</h3>
+                <div class="setting-group">
+                    <label>OpenAI API Key</label>
+                    <input type="password" id="api-key-input" placeholder="sk-..." />
+                    <p class="setting-hint">🔒 仅保存在本地，不会上传到任何服务器</p>
+                </div>
+                <div class="modal-actions">
+                    <button id="btn-settings-cancel" class="btn btn-secondary">取消</button>
+                    <button id="btn-settings-save" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="panel.js" type="module"></script>
+</body>
+
+</html>

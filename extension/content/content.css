@@ -1,0 +1,40 @@
+/* VidNote Extension — Content Script 样式 */
+
+/* 浮动按钮：YouTube 播放器右上角 */
+#vidnote-fab {
+    position: absolute;
+    top: 12px;
+    right: 60px;
+    z-index: 9999;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #7C3AED, #3B82F6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+/* 鼠标悬停在播放器时显示按钮 */
+#movie_player:hover #vidnote-fab,
+#vidnote-fab:hover {
+    opacity: 1;
+}
+
+#vidnote-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.5);
+}
+
+#vidnote-fab:active {
+    transform: scale(0.95);
+}
+
+#vidnote-fab svg {
+    pointer-events: none;
+}
