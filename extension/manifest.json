@@ -43,6 +43,7 @@
     "permissions": [
         "storage",
         "activeTab",
+        "tabs",
         "sidePanel"
     ],
     "host_permissions": [

@@ -6,14 +6,9 @@
  * 3. 上下文菜单
  */
 
-// 点击扩展图标时打开侧边栏
-chrome.action.onClicked.addListener(async (tab) => {
-    // 在当前标签页打开侧边栏
-    await chrome.sidePanel.open({ tabId: tab.id });
-});
-
-// 设置侧边栏行为：点击图标时打开
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+// 设置侧边栏行为：点击扩展图标时自动打开侧边栏
+chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((err) => console.warn('Side panel not supported:', err));
 
 // 消息路由：在 Content Script 和 Side Panel 之间中转消息
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
