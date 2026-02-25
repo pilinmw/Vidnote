@@ -36,8 +36,16 @@
 | 模式 | 说明 | 适用场景 |
 |------|------|---------|
 | 🎬 **视频模式** | 播放 YouTube / 本地视频，边看边记 | 学习视频、教程、演讲 |
-| 📡 **直播模式** | 内置计时器，实时记录直播内容 | 直播观看、线上活动 |
-| 🎙️ **会议模式** | 内置计时器，记录会议要点和行动项 | 团队会议、讲座、讨论 |
+| 📡 **直播模式** | 计时器 + 🎤实时语音识别，自动记录 | 直播观看、线上活动 |
+| 🎙️ **会议模式** | 计时器 + 🎤实时语音识别，自动记录 | 团队会议、讲座、讨论 |
+
+### 🎤 实时语音识别（直播/会议模式）
+
+- ✅ 基于 Web Speech API，**免费、零配置**
+- ✅ 自动将语音转为带时间戳的笔记
+- ✅ 支持中文、英文、日语、韩语
+- ✅ 实时显示识别中的文字预览
+- ⚠️ 推荐使用 Chrome 浏览器（兼容性最佳）
 
 ### 🎬 视频支持
 
@@ -102,6 +110,7 @@ npm run dev
 | [React Router v7](https://reactrouter.com/) | 路由 |
 | [Zustand](https://zustand.docs.pmnd.rs/) | 状态管理 |
 | [React Player](https://github.com/cookpete/react-player) | 视频播放器 |
+| [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API) | 实时语音识别 |
 | [idb](https://github.com/jakearchibald/idb) | IndexedDB 封装 |
 | [OpenAI API](https://platform.openai.com/) | AI 总结 |
 | Vanilla CSS | 样式方案 |
@@ -124,9 +133,11 @@ npm run dev
 
 1. 创建项目时选择"📡 直播记录"或"🎙️ 会议记录"
 2. 进入工作区后，点击 **"开始记录"** 启动计时器
-3. 随时在右侧添加笔记，自动关联当前计时器时间
-4. 可随时 **暂停/继续** 计时器
-5. 结束后使用 AI 总结自动生成摘要（会议模式会额外生成行动计划）
+3. 点击 **🎤 开启语音识别** → 自动将语音转为带时间戳的笔记
+4. 可选择识别语言（中/英/日/韩）
+5. 也可以随时手动在右侧添加笔记
+6. 可随时 **暂停/继续** 计时器
+7. 结束后使用 AI 总结自动生成摘要（会议模式会额外生成行动计划）
 
 ### 快捷键
 
@@ -164,7 +175,8 @@ VidNote/
 │   │   └── useNoteStore.js    # 笔记状态
 │   ├── services/              # 服务层
 │   │   ├── storage.js         # IndexedDB 操作
-│   │   └── ai.js              # OpenAI API 集成
+│   │   ├── ai.js              # OpenAI API 集成
+│   │   └── speech.js          # 语音识别服务
 │   ├── utils/                 # 工具函数
 │   │   └── formatTime.js      # 时间格式化等
 │   ├── styles/                # 样式
@@ -197,14 +209,16 @@ VidNote/
 - [x] 暗色主题 UI
 - [x] 直播模式（实时计时器 + 笔记）
 - [x] 会议模式（会议计时器 + 行动计划总结）
+- [x] 实时语音识别（Web Speech API，支持中/英/日/韩）
+- [x] 语音自动生成时间戳笔记
 
 ### 🔲 Phase 2 — 增强
 
 - [ ] 用户认证 & 云端同步（Supabase）
+- [ ] Whisper API 高精度语音转写
 - [ ] 视频字幕集成
 - [ ] 多语言 AI 总结
 - [ ] 协作笔记
-- [ ] 录音 + 语音转文字
 
 ### 🔲 Phase 3 — 移动端
 

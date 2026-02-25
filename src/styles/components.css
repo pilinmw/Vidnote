@@ -862,3 +862,87 @@
 .btn-danger:active {
     transform: translateY(0);
 }
+
+/* --- Speech Recognition --- */
+.speech-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.speech-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg) !important;
+    border-radius: var(--radius-full) !important;
+    font-size: var(--font-size-sm) !important;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    transition: all var(--transition-normal);
+}
+
+.speech-toggle-btn:hover {
+    border-color: var(--color-border-hover);
+    background: var(--color-bg-hover);
+}
+
+.speech-toggle-btn.active {
+    border-color: transparent;
+}
+
+.speech-mic-icon {
+    font-size: 1.1rem;
+    display: inline-block;
+}
+
+.speech-mic-icon.pulsing {
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
+.speech-lang-select {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs);
+    font-family: var(--font-family);
+    cursor: pointer;
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.speech-lang-select:focus {
+    border-color: var(--color-accent-primary);
+}
+
+.speech-lang-select option {
+    background: var(--color-bg-secondary);
+    color: var(--color-text-primary);
+}
+
+.speech-interim {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius-md);
+    max-width: 80%;
+}
+
+.speech-interim-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+}
+
+.speech-interim-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-accent);
+    font-style: italic;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
